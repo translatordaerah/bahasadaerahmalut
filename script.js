@@ -13,7 +13,7 @@
         {"ind":"kuning","ter":"yel","tido":"wolu","tob":"wila","img":"assets/img/bapak.png"},
         {"ind":"nasi kuning","ter":"ampeng","tido":"tumpeng","tob":"apeng tu","img":"assets/img/bapak.png"},
         {"ind":"ibu","ter":"ina","tido":"ine","tob":"mama","img":"assets/img/ibu.png"},
-        {"ind":"saudara","ter":"hira sebira","tido":"hirane","tob":"ne-hira","img":"img/kucing.png"},
+        {"ind":"saudara","ter":"hira sebira","tido":"hirane","tob":"ne-hira","img":"img/mulut.png"},
         {"ind":"saudara laki-laki","ter":"ngofa","tido":"ihara","tob":"hiha","img":"assets/img/saudara.png"},
         {"ind":"saudara perempuan","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
         {"ind":"bibi","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
