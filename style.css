@@ -7,5 +7,8 @@ body{background:var(--bg);color:#111827;font-family:Inter,system-ui,-apple-syste
 textarea{resize:vertical}
 img.card-img-top{object-fit:cover;height:120px;background:#eef2f7}
 pre#log{white-space:pre-wrap}
+.navbar-brand {
+  white-space: nowrap;
+}
 
 
