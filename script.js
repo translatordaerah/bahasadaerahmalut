@@ -184,6 +184,29 @@
     }
   }
 
+// 🔤 Sort A–Z berdasarkan Bahasa Indonesia
+function sortAZByInd(list){
+  return [...list].sort((a, b) =>
+    (a.ind || '').localeCompare(b.ind || '', 'id', { sensitivity: 'base' })
+  );
+}
+
+
+  // ======================
+  // 🔠 Matching prefix functions
+  // ======================
+  // 🔠 PENCARIAN BARU: HURUF AWAL SAJA
+function matchPrefixIndo(it, prefix){
+  if(!prefix) return false;
+  return it.ind && it.ind.toLowerCase().startsWith(prefix);
+}
+function matchPrefixDaerah(it, prefix, lang){
+  if(!prefix) return false;
+  const val = it[lang];
+  return val && val.toLowerCase().startsWith(prefix);
+}
+
+
   // ======================
   // 🪧 renderCategory: tampil kartu, pencarian, dan audio 1x/2x
   // ======================
@@ -195,20 +218,42 @@
     const list = (DICT[category] && DICT[category][theme]) || [];
     const chosen = $('choosebahasa')?.value || 'ter';
     const search = ($('searchWord')?.value || '').toLowerCase().trim();
-    
+    const prefixInd = ($('searchPrefixInd')?.value || '').toLowerCase().trim();
+    const prefixLoc = ($('searchPrefixLoc')?.value || '').toLowerCase().trim();
 
+    // filter berdasarkan search & prefix
     const filtered = list.filter(it=>{
-      if(!search) return true;
-      const combined = [it.ind, it.ter, it.tido, it.tob].filter(Boolean).join(' ').toLowerCase();
-      return combined.includes(search);
-    });
+
+  // 🔤 1️⃣ PREFIX BAHASA INDONESIA
+  if(prefixInd){
+    return matchPrefixIndo(it, prefixInd);
+  }
+
+  // 🌍 2️⃣ PREFIX BAHASA DAERAH (sesuai pilihan)
+  if(prefixLoc){
+    return matchPrefixDaerah(it, prefixLoc, chosen);
+  }
+
+  // 🔍 3️⃣ SEARCH LAMA (includes)
+  if(!search) return true;
+
+  const combined = [it.ind, it.ter, it.tido, it.tob]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  return combined.includes(search);
+});
+
+    // 🔤 URUTKAN A–Z BERDASARKAN BAHASA INDONESIA
+    const sorted = sortAZByInd(filtered);
 
     if(filtered.length === 0){
       cont.innerHTML = `<div class="p-3 text-muted">Tidak ditemukan hasil untuk "<strong>${search}</strong>"</div>`;
       return;
     }
 
-    filtered.forEach(it=>{
+    sorted.forEach(it=>{
       const label = it[chosen] || '-';
       const card = document.createElement('div');
       card.className = 'card shadow-sm';
@@ -306,7 +351,8 @@
     Object.entries(DICT).forEach(([cat,themes])=>{
       if(filterCat !== "all" && filterCat !== cat) return;
       Object.entries(themes).forEach(([theme,list])=>{
-        list.forEach(it=>{
+      const sortedList = sortAZByInd(list); // 🔤 A–Z
+      sortedList.forEach(it=>{
           const tr = document.createElement('tr');
           tr.innerHTML = `<td>${cat}</td><td>${theme}</td><td>${it.ind||''}</td>
             <td>${it.ter||''}</td><td>${it.tido||''}</td><td>${it.tob||''}</td>`;
@@ -356,6 +402,23 @@
       $('outputText').value = translateWithMap(raw, dir);
       $('log').textContent = 'Terjemah langsung dari kamus lokal.';
     });
+
+    $('searchPrefixInd')?.addEventListener('input', ()=>{
+    $('searchPrefixLoc').value = ''; // matikan yang lain
+    renderCategory(
+      $('categorySelect')?.value,
+      $('themeSelect')?.value
+    );
+  });
+
+  $('searchPrefixLoc')?.addEventListener('input', ()=>{
+    $('searchPrefixInd').value = ''; // matikan yang lain
+    renderCategory(
+      $('categorySelect')?.value,
+      $('themeSelect')?.value
+    );
+  });
+
 
     // clear
     $('clearBtn')?.addEventListener('click', ()=>{
