@@ -7,8 +7,93 @@ body{background:var(--bg);color:#111827;font-family:Inter,system-ui,-apple-syste
 textarea{resize:vertical}
 img.card-img-top{object-fit:cover;height:120px;background:#eef2f7}
 pre#log{white-space:pre-wrap}
-.navbar-brand {
-  white-space: nowrap;
+
+/* =====================================
+   RESPONSIVE VOCAB CARD GRID
+   HP: 3 | Tablet: 4 | Desktop: 6
+===================================== */
+
+
+/* card full-width di grid */
+.vocab-card {
+  width: 100%;
+  margin: 0;
+}
+
+.vocab-grid {
+  display: grid;
+  row-gap: 6px;      /* jarak atas–bawah */
+  column-gap: 8px;  /* jarak kiri–kanan */
+  padding: 0;
+}
+
+.vocab-card .card-body {
+  padding: 10px 12px;
+}
+
+.vocab-card {
+  transform-origin: center;
+}
+
+.vocab-card:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+
+
+/* HP */
+@media (max-width: 575.98px) {
+  .vocab-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet */
+@media (min-width: 576px) and (max-width: 991.98px) {
+  .vocab-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+  .vocab-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+.alert{font-size:.875rem;}
+
+/* =====================================
+   BOOTSTRAP INTERACTIVE CARD
+===================================== */
+
+/* warna dasar */
+.vocab-card {
+  background: #eec4be;
+  border-radius: .6rem;
+  border: 1px solid #e6eef6;
+  transition: 
+    transform .2s ease,
+    box-shadow .2s ease,
+    background-color .2s ease;
+}
+
+/* hover desktop */
+.vocab-card:hover {
+  transform: scale(1.06);
+  background-color: #9ecae7;
+  box-shadow: 0 10px 28px rgba(250, 248, 248, 0.15);
+}
+
+/* sentuh / klik HP */
+.vocab-card:active {
+  transform: scale(1.12);
+  background-color: #e0f2fe;
+}
+
+/* hilangkan efek tap biru HP */
+.vocab-card {
+  -webkit-tap-highlight-color: transparent;
 }
 
 
