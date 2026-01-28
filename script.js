@@ -6,71 +6,23 @@
   // 🗂️ Data Kamus (LOCAL DICT)
   // ======================
   const DICT = {
-    "Kata Benda": {
-      "Keluarga": [
-        {"ind":"ayah","ter":"baba","tido":"dadi","tob":"papa","img":"https://img.freepik.com/premium-photo/3d-illustration-cartoon-character-with-happy-expression-his-face_1057-44581.jpg?w=360"},
-        {"ind":"ibu","ter":"ina","tido":"ine","tob":"mama","img":"https://img.freepik.com/free-photo/celebration-labour-day-with-3d-cartoon-portrait-working-woman_23-2151306628.jpg?semt=ais_hybrid&w=740&q=80"},
-        {"ind":"anak","ter":"anak","tido":"anak","tob":"anak","img":"https://marketplace.canva.com/4aiT4/MAGid44aiT4/1/tl/canva-happy-cartoon-boy-drawing-outdoors-MAGid44aiT4.jpg"},
-        {"ind":"anak laki-laki","ter":"anak lanang","tido":"anak mane","tob":"anak lang","img":"https://png.pngtree.com/png-clipart/20250119/original/pngtree-3d-animated-boy-character-with-cool-outfit-and-energetic-pose-png-image_19860542.png"},
-        {"ind":"anak perempuan","ter":"anak wadon","tido":"anak fona","tob":"anak weng","img":"https://i.pinimg.com/236x/56/e5/06/56e506857047aa0d16225da817f68108.jpg"},
-        {"ind":"kakak","ter":"kaka","tido":"kaka","tob":"kaka","img":"https://img.freepik.com/foto-gratis/pria-kebugaran-kartun-3d_23-2151691490.jpg"},
-        {"ind":"adik","ter":"bade","tido":"bade","tob":"bade","img":"https://png.pngtree.com/png-vector/20250823/ourmid/pngtree-2d-animated-character-for-a-kids-anime-style-character-character-png-image_17303971.png"},
-        {"ind":"kakek","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
-        {"ind":"nenek","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
-        {"ind":"suami","ter":"suami","tido":"suami","tob":"suami","img":"assets/img/suami.png"},
-        {"ind":"istri","ter":"istri","tido":"istri","tob":"istri","img":"assets/img/istri.png"},
-        {"ind":"paman","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
-        {"ind":"paman","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
-        {"ind":"bibi","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
-        {"ind":"sepupu","ter":"sepupu","tido":"sepupu","tob":"sepupu","img":"assets/img/sepupu.png"},
-        {"ind":"cucu","ter":"cucu","tido":"cucu","tob":"cucu","img":"assets/img/cucu.png"},
-        {"ind":"mertua","ter":"mertua","tido":"mertua","tob":"mertua","img":"assets/img/mertua.png"},
-        {"ind":"mertua laki-laki","ter":"bapa mertua","tido":"dadi mertua","tob":"papa mertua","img":"assets/img/mertua.png"},
-        {"ind":"mertua perempuan","ter":"ibu mertua","tido":"ine mertua","tob":"mama mertua","img":"assets/img/mertua2.png"},
-        {"ind":"menantu","ter":"menantu","tido":"menantu","tob":"menantu","img":"assets/img/menantu.png"},
-        {"ind":"menantu laki-laki","ter":"menantu lanang","tido":"menantu mane","tob":"menantu lang","img":"assets/img/menantu_laki.png"},
-        {"ind":"menantu perempuan","ter":"menantu wadon","tido":"menantu fona","tob":"menantu weng","img":"assets/img/menantu_perempuan.png"},
+    "Kata sapaan": {
+      "sebutan": [
+        {"ind":"ayah","ter":"baba","tido":"dadi","tob":"papa","img":"assets/img/bapak.png"},
+        {"ind":"nasi","ter":"rice","tido":"ruce","tob":"race","img":"assets/img/bapak.png"},
+        {"ind":"kuning","ter":"yel","tido":"wolu","tob":"wila","img":"assets/img/bapak.png"},
+        {"ind":"nasi kuning","ter":"ampeng","tido":"tumpeng","tob":"apeng tu","img":"assets/img/bapak.png"},
+        {"ind":"ibu","ter":"ina","tido":"ine","tob":"mama","img":"assets/img/ibu.png"},
         {"ind":"saudara","ter":"hira sebira","tido":"hirane","tob":"ne-hira","img":"img/mulut.png"},
         {"ind":"saudara laki-laki","ter":"ngofa","tido":"ihara","tob":"hiha","img":"assets/img/saudara.png"},
         {"ind":"saudara perempuan","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
-        {"ind":"sepupu laki-laki","ter":"sepupu lanang","tido":"sepupu mane","tob":"sepupu lang","img":"assets/img/sepupu.png"},
-        {"ind":"sepupu perempuan","ter":"sepupu wadon","tido":"sepupu fona","tob":"sepupu weng","img":"assets/img/sepupu2.png"},
-        {"ind":"seibu","ter":"seibu","tido":"seibu","tob":"seibu","img":"assets/img/seibu.png"},
-        {"ind":"seayah","ter":"seayah","tido":"seayah","tob":"seayah","img":"assets/img/seayah.png"},
-        {"ind":"bayi","ter":"bayi","tido":"bayi","tob":"bayi","img":"assets/img/bayi.png"},
-        {"ind":"ipar laki-laki","ter":"ipar lanang","tido":"ipar mane","tob":"ipar lang","img":"assets/img/ipar_laki.png"},
-        {"ind":"ipar perempuan","ter":"ipar wadon","tido":"ipar fona","tob":"ipar weng","img":"assets/img/ipar_perempuan.png"},
-        {"ind":"laki-laki","ter":"lanang","tido":"mane","tob":"lang","img":"assets/img/laki_laki.png"},
-        {"ind":"perempuan","ter":"wadon","tido":"fona","tob":"weng","img":"assets/img/perempuan.png"},
-      ],
-      "Tubuh": [
-        {"ind":"kepala","ter":"sirah","tido":"kapa","tob":"kafa","img":"assets/img/kepala.png"},
-        {"ind":"mata","ter":"mripat","tido":"mata","tob":"mata","img":"assets/img/mata.png"},
-        {"ind":"telinga","ter":"kuping","tido":"kuli","tob":"kufi","img":"assets/img/telinga.png"},
-        {"ind":"hidung","ter":"irung","tido":"hidu","tob":"hidu","img":"assets/img/hidung.png"},
-        {"ind":"mulut","ter":"cangkem","tido":"loma","tob":"loma","img":"assets/img/mulut.png"},
-        {"ind":"gigi","ter":"untu","tido":"gigi","tob":"gigi","img":"assets/img/gigi.png"},
-        {"ind":"leher","ter":"gulu","tido":"leher","tob":"leher","img":"assets/img/leher.png"},
-        {"ind":"tangan","ter":"tangan","tido":"tangan","tob":"tangan","img":"assets/img/tangan.png"},
-        {"ind":"kaki","ter":"sikil","tido":"kaki","tob":"kaki","img":"assets/img/kaki.png"},
-        {"ind":"perut","ter":"weteng","tido":"perut","tob":"perut","img":"assets/img/perut.png"},
-        {"ind":"punggung","ter":"punggung","tido":"punggung","tob":"punggung","img":"assets/img/punggung.png"},
-        {"ind":"jantung","ter":"jantung","tido":"jantung","tob":"jantung","img":"assets/img/jantung.png"},
-        {"ind":"otak","ter":"otak","tido":"otak","tob":"otak","img":"assets/img/otak.png"},
-        {"ind":"dagu","ter":"dagu","tido":"dagu","tob":"dagu","img":"assets/img/dagu.png"},
-        {"ind":"dahi","ter":"dahi","tido":"dahi","tob":"dahi","img":"assets/img/dahi.png"},
-        {"ind":"pipi","ter":"pipi","tido":"pipi","tob":"pipi","img":"assets/img/pipi.png"},
-        {"ind":"lengan","ter":"lengan","tido":"lengan","tob":"lengan","img":"assets/img/lengan.png"},
-        {"ind":"lutut","ter":"lutut","tido":"lutut","tob":"lutut","img":"assets/img/lutut.png"},
-        {"ind":"bahu","ter":"badhuk","tido":"bahu","tob":"bahu","img":"assets/img/bahu.png"},
-        {"ind":"paha","ter":"paha","tido":"paha","tob":"paha","img":"assets/img/paha.png"},
-        {"ind":"betis","ter":"betis","tido":"betis","tob":"betis","img":"assets/img/betis.png"},
-        {"ind":"rambut","ter":"rambut","tido":"rambut","tob":"rambut","img":"assets/img/rambut.png"},
-        {"ind":"alis","ter":"alis","tido":"alis","tob":"alis","img":"assets/img/alis.png"},
-        {"ind":"jari","ter":"driji","tido":"jari","tob":"jari","img":"assets/img/jari.png"},
-        {"ind":"lidah","ter":"lidah","tido":"lidah","tob":"lidah","img":"assets/img/lidah.png"},
-        {"ind":"kuku","ter":"kuku","tido":"kuku","tob":"kuku","img":"assets/img/kuku.png"},
-        {"ind":"siku","ter":"siku","tido":"siku","tob":"siku","img":"assets/img/siku.png"}
+        {"ind":"bibi","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
+        {"ind":"paman","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
+        {"ind":"kakek","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
+        {"ind":"nenek","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"},
+        {"ind":"tuan","ter":"tuan","tido":"tuan","tob":"tuan","img":"assets/img/tuan.png"},
+        {"ind":"mbak","ter":"bade","tido":"bade","tob":"bade","img":"assets/img/mbak.png"},
+        {"ind":"mas","ter":"kaka","tido":"kaka","tob":"kaka","img":"assets/img/mas.png"}
       ],
       "sapaan biasa": [
         {"ind":"halo","ter":"halo","tido":"halo","tob":"halo","img":"assets/img/hallo.png"},
@@ -83,8 +35,7 @@
         {"ind":"akan","ter":"bakal","tido":"baka","tob":"gaga","img":"assets/img/akan.png"},
         {"ind":"sudah","ter":"suda","tido":"suda","tob":"so","img":"assets/img/sudah.png"},
         {"ind":"belum","ter":"belum","tido":"belo","tob":"tado","img":"assets/img/belum.png"},
-        {"ind":"ingin","ter":"arep","tido":"hare","tob":"gola","img":"assets/img/ingin.png"},
-        {"ind":"nenek","ter":"ngofa bade","tido":"ihara bade","tob":"hiha bade","img":"assets/img/saudara2.png"}        
+        {"ind":"ingin","ter":"arep","tido":"hare","tob":"gola","img":"assets/img/ingin.png"}
       ]
     }
   };
@@ -234,158 +185,6 @@
   }
 
   // ======================
-  // 🔤 countAllVocabulary: hitung total kosakata di DICT
-  // ======================
-  function countAllVocabulary(){
-  let total = 0;
-
-  Object.values(DICT).forEach(themes=>{
-    Object.values(themes).forEach(list=>{
-      total += list.length;
-    });
-  });
-
-  return total;
-}
-
-  // ======================
-  // 🔤 countUniqueVocabulary: hitung total kosakata unik di DICT
-  // ======================
-function countUniqueVocabulary(){
-  const set = new Set();
-
-  Object.values(DICT).forEach(themes=>{
-    Object.values(themes).forEach(list=>{
-      list.forEach(it=>{
-        if(it.ind){
-          set.add(it.ind.toLowerCase().trim());
-        }
-      });
-    });
-  });
-
-  return set.size;
-}
-
-
-  // ======================
-  // 🔤 detectDuplicateVocabulary: deteksi kosakata duplikat di DIC
-  // ======================
-function detectDuplicateVocabulary(){
-  const map = new Map();
-
-  Object.values(DICT).forEach(themes=>{
-    Object.values(themes).forEach(list=>{
-      list.forEach(it=>{
-        if(!it.ind) return;
-        const key = it.ind.toLowerCase().trim();
-        map.set(key, (map.get(key) || 0) + 1);
-      });
-    });
-  });
-
-  // ambil yang lebih dari 1
-  return [...map.entries()]
-    .filter(([_, count]) => count > 1)
-    .map(([word, count]) => ({ word, count }));
-}
-
-
-function renderVocabularyStats(){
-  const total = countAllVocabulary();
-  const unik = countUniqueVocabulary();
-  const duplikat = detectDuplicateVocabulary();
-
-  $('totalUnik').textContent =
-    `Total kosa kata unik: ${unik}`;
-
-  $('statKamus').innerHTML = `
-    <div>📘 Total data: <b>${total}</b></div>
-    <div>✅ Total unik: <b>${unik}</b></div>
-    <div>⚠️ Duplikat: <b>${duplikat.length}</b></div>
-  `;
-}
-
-function detectDuplicateWithLocation(){
-  const map = {};
-
-  Object.entries(DICT).forEach(([kategori, themes])=>{
-    Object.entries(themes).forEach(([tema, list])=>{
-      list.forEach(it=>{
-        if(!it.ind) return;
-
-        const key = it.ind.toLowerCase().trim();
-        if(!map[key]) map[key] = [];
-        map[key].push({ kategori, tema });
-      });
-    });
-  });
-
-  return Object.entries(map)
-    .filter(([_, arr]) => arr.length > 1)
-    .map(([kata, lokasi]) => ({
-      kata,
-      jumlah: lokasi.length,
-      lokasi
-    }));
-}
-
-function renderDuplicateDetail(){
-  const data = detectDuplicateWithLocation();
-  const box = $('duplicateDetail');
-
-  if(data.length === 0){
-    box.classList.add('d-none');
-    return;
-  }
-
-  let html = `<b>⚠️ Kata duplikat terdeteksi:</b><ul class="mb-0">`;
-
-  data.forEach(d=>{
-    html += `
-      <li>
-        <b>${d.kata}</b> (${d.jumlah}x)
-        <br>
-        <small>
-          ${d.lokasi.map(l=>`${l.kategori} → ${l.tema}`).join(' | ')}
-        </small>
-      </li>`;
-  });
-
-  html += `</ul>`;
-  box.innerHTML = html;
-  box.classList.remove('d-none');
-}
-
-
-
-  // ======================
-  // 🔤 sortAZByInd: mengurutkan A–Z berdasarkan Bahasa Indonesia
-  // ======================
-// 🔤 Sort A–Z berdasarkan Bahasa Indonesia
-function sortAZByInd(list){
-  return [...list].sort((a, b) =>
-    (a.ind || '').localeCompare(b.ind || '', 'id', { sensitivity: 'base' })
-  );
-}
-
-
-  // ======================
-  // 🔠 Matching prefix functions
-  // ======================
-  // 🔠 PENCARIAN BARU: HURUF AWAL SAJA
-function matchPrefixIndo(it, prefix){
-  if(!prefix) return false;
-  return it.ind && it.ind.toLowerCase().startsWith(prefix);
-}
-function matchPrefixDaerah(it, prefix, lang){
-  if(!prefix) return false;
-  const val = it[lang];
-  return val && val.toLowerCase().startsWith(prefix);
-}
-
-
-  // ======================
   // 🪧 renderCategory: tampil kartu, pencarian, dan audio 1x/2x
   // ======================
   function renderCategory(category, theme){
@@ -396,50 +195,28 @@ function matchPrefixDaerah(it, prefix, lang){
     const list = (DICT[category] && DICT[category][theme]) || [];
     const chosen = $('choosebahasa')?.value || 'ter';
     const search = ($('searchWord')?.value || '').toLowerCase().trim();
-    const prefixInd = ($('searchPrefixInd')?.value || '').toLowerCase().trim();
-    const prefixLoc = ($('searchPrefixLoc')?.value || '').toLowerCase().trim();
+    
 
-    // filter berdasarkan search & prefix
     const filtered = list.filter(it=>{
-
-  // 🔤 1️⃣ PREFIX BAHASA INDONESIA
-  if(prefixInd){
-    return matchPrefixIndo(it, prefixInd);
-  }
-
-  // 🌍 2️⃣ PREFIX BAHASA DAERAH (sesuai pilihan)
-  if(prefixLoc){
-    return matchPrefixDaerah(it, prefixLoc, chosen);
-  }
-
-  // 🔍 3️⃣ SEARCH LAMA (includes)
-  if(!search) return true;
-
-  const combined = [it.ind, it.ter, it.tido, it.tob]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase();
-
-  return combined.includes(search);
-});
-
-    // 🔤 URUTKAN A–Z BERDASARKAN BAHASA INDONESIA
-    const sorted = sortAZByInd(filtered);
+      if(!search) return true;
+      const combined = [it.ind, it.ter, it.tido, it.tob].filter(Boolean).join(' ').toLowerCase();
+      return combined.includes(search);
+    });
 
     if(filtered.length === 0){
       cont.innerHTML = `<div class="p-3 text-muted">Tidak ditemukan hasil untuk "<strong>${search}</strong>"</div>`;
       return;
     }
 
-    sorted.forEach(it=>{
+    filtered.forEach(it=>{
       const label = it[chosen] || '-';
       const card = document.createElement('div');
-      card.className = "card vocab-card shadow-sm h-100 border-0";
+      card.className = 'card shadow-sm';
       card.style.width = '10rem';
       card.style.margin = '6px';
       card.innerHTML = `
         ${it.img?`<img src="${it.img}" class="card-img-top" alt="${it.ind}">`:''}
-        <div class="card-body text-center p-3">
+        <div class="card-body text-center">
           <h6 class="card-title mb-1">${it.ind}</h6>
           <p class="card-text small text-primary mb-0"><em>${label}</em></p>
         </div>`;
@@ -529,8 +306,7 @@ function matchPrefixDaerah(it, prefix, lang){
     Object.entries(DICT).forEach(([cat,themes])=>{
       if(filterCat !== "all" && filterCat !== cat) return;
       Object.entries(themes).forEach(([theme,list])=>{
-      const sortedList = sortAZByInd(list); // 🔤 A–Z
-      sortedList.forEach(it=>{
+        list.forEach(it=>{
           const tr = document.createElement('tr');
           tr.innerHTML = `<td>${cat}</td><td>${theme}</td><td>${it.ind||''}</td>
             <td>${it.ter||''}</td><td>${it.tido||''}</td><td>${it.tob||''}</td>`;
@@ -546,8 +322,6 @@ function matchPrefixDaerah(it, prefix, lang){
   function initUI(){
     populateDropdown();
     renderTable();
-    renderVocabularyStats();
-    renderDuplicateDetail();
 
     // translate utama: ambil dari kamus dulu, lalu (opsional) minta GPT memperbaiki
     $('translateBtn')?.addEventListener('click', async ()=>{
@@ -582,23 +356,6 @@ function matchPrefixDaerah(it, prefix, lang){
       $('outputText').value = translateWithMap(raw, dir);
       $('log').textContent = 'Terjemah langsung dari kamus lokal.';
     });
-
-    $('searchPrefixInd')?.addEventListener('input', ()=>{
-    $('searchPrefixLoc').value = ''; // matikan yang lain
-    renderCategory(
-      $('categorySelect')?.value,
-      $('themeSelect')?.value
-    );
-  });
-
-  $('searchPrefixLoc')?.addEventListener('input', ()=>{
-    $('searchPrefixInd').value = ''; // matikan yang lain
-    renderCategory(
-      $('categorySelect')?.value,
-      $('themeSelect')?.value
-    );
-  });
-
 
     // clear
     $('clearBtn')?.addEventListener('click', ()=>{
