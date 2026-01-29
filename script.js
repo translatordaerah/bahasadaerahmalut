@@ -218,7 +218,10 @@ Jika kalimat sudah benar, kembalikan apa adanya.`
     signal: controller.signal
   });
 
-  if(!resp.ok) throw new Error('AI error');
+  if(!resp.ok){
+  const err = await resp.text();
+  throw new Error(err);
+}
 
   const j = await resp.json();
   return j?.choices?.[0]?.message?.content || text;
@@ -560,8 +563,8 @@ function matchPrefixDaerah(it, prefix, lang){
       try{
         translated = await callOpenAIcorrect(translated);
         $('log').textContent = '✅ Kalimat diperhalus oleh GPT';
-      }catch{
-        $('log').textContent = '⚠️ GPT sibuk, pakai hasil kamus';
+      }catch(e){
+        $('log').textContent = '❌ AI Error: ' + e.message;
       }
     } else {
       $('log').textContent = 'Mode tanpa AI';
