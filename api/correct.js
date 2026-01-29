@@ -27,14 +27,27 @@ export default async function handler(req, res) {
           content: [
             {
               type: "text",
-              text: `Perbaiki kalimat Bahasa Indonesia berikut menjadi BAKU dan FORMAL.
-    WAJIB perbaiki jika ada kata yang kurang tepat (contoh: tambah "ke", "yang", dll).
-    JANGAN mempertahankan gaya informal.
-    
-    Kalimat:
-    "${text}"
-    
-    Jawab HANYA dengan hasil akhir kalimat.`
+              text: `
+              Tugasmu adalah MEMBAKUKAN kalimat Bahasa Indonesia sesuai kaidah KBBI.
+              
+              ATURAN WAJIB:
+              - Tambahkan preposisi yang HILANG seperti "ke", "di", "dari"
+              - Ubah struktur lisan menjadi struktur BAKU
+              - Kapitalisasi awal kalimat
+              - JANGAN mengembalikan kalimat yang sama jika masih tidak baku
+              
+              CONTOH WAJIB:
+              Input: "aku pergi pasar"
+              Output: "Aku pergi ke pasar."
+              
+              Input: "saya sekolah kemarin"
+              Output: "Saya pergi ke sekolah kemarin."
+              
+              Sekarang perbaiki kalimat ini:
+              "${text}"
+              
+              Jawab HANYA dengan SATU kalimat hasil akhir.
+              `
             }
           ]
         }
@@ -82,6 +95,7 @@ else if (Array.isArray(data.output)) {
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
 
 
 
