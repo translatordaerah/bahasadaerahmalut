@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: req.body.model || 'gpt-4o-mini',
+        model: req.body.model || 'gpt-4.1-mini',
         input: req.body.messages?.map(m => m.content).join('\n')
       })
     });
@@ -30,15 +30,18 @@ export default async function handler(req, res) {
     }
 
     // Normalisasi agar frontend TIDAK perlu diubah
-    res.status(200).json({
-      choices: [
-        {
-          message: {
-            content: data.output_text || ''
-          }
-        }
-      ]
-    });
+const text = extractText(data);
+
+res.status(200).json({
+  choices: [
+    {
+      message: {
+        content: text
+      }
+    }
+  ]
+});
+
 
   } catch (err) {
     console.error('Server error:', err);
