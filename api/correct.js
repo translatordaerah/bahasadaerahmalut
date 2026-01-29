@@ -4,71 +4,31 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ error: 'OPENAI_API_KEY missing' });
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+  if (!OPENAI_API_KEY) {
+    return res.status(400).json({ error: 'OPENAI_API_KEY missing' });
   }
 
+  const body = req.body || {};
+  if (!body.model) body.model = 'gpt-5.2-mini';
+  if (!body.messages) body.messages = [{ role: 'user', content: 'Halo' }];
+
   try {
-    let input;
-
-    // 🔹 KASUS 1: dari QUIZ (pakai messages)
-    if (Array.isArray(req.body.messages)) {
-      input = [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: req.body.messages
-                .map(m => m.content)
-                .join("\n")
-            }
-          ]
-        }
-      ];
-    }
-
-    // 🔹 KASUS 2: dari TRANSLATOR (sudah input)
-    else if (req.body.input) {
-      input = req.body.input;
-    }
-
-    // 🔴 FORMAT TIDAK VALID
-    else {
-      return res.status(400).json({
-        error: "Invalid payload: expected 'messages' or 'input'"
-      });
-    }
-
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
       },
-      body: JSON.stringify({
-        model: "gpt-5.2-mini",
-        input,
-        max_output_tokens: req.body.max_tokens || 800
-      })
+      body: JSON.stringify(body),
     });
 
     const data = await response.json();
+    if (!response.ok) return res.status(response.status).json(data);
 
-    const text =
-      data.output_text ||
-      data.output?.[0]?.content?.[0]?.text ||
-      '';
-
-    // 🔁 BIKIN KOMPATIBEL DENGAN KODE QUIZ & TRANSLATOR
-    return res.status(200).json({
-      choices: [
-        { message: { content: text } }
-      ]
-    });
-
+    res.status(200).json(data);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: err.message });
+    res.status(500).json({ error: String(err.message || err) });
   }
 }
