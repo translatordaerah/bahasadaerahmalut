@@ -191,47 +191,35 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
-  async function callOpenAIcorrect(text){
-    if(!text) return text;
-    try{
-      const body = {
-        model: (typeof OPENAI_MODEL !== 'undefined' ? OPENAI_MODEL : 'gpt-5.2-mini'),
-        messages: [
-        {
-          role: 'system',
-          content:
-            'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata bahasa agar lebih alami **tanpa mengubah arti atau kata utama yang sudah diterjemahkan dari kamus lokal**. Jangan ganti kata dasar atau istilah lokal. Jika kalimat sudah wajar, biarkan sama.'
-        },
-        {
-          role: 'user',
-          content: `Perhalus kalimat hasil terjemahan ini agar lebih alami tanpa mengubah maknanya: "${text}".`
-        }
+async function callOpenAIcorrect(text){
+  if(!text) return text;
 
-        ],
-        temperature: 0
-      };
-
-      const resp = await fetch((typeof API_PROXY_URL !== 'undefined' ? API_PROXY_URL : '/api/correct'), {
+  try{
+    const resp = await fetch(
+      (typeof API_PROXY_URL !== 'undefined' ? API_PROXY_URL : '/api/correct'),
+      {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(text)
-      });
-
-      if(!resp.ok){
-        // jika proxy/AI gagal, throw untuk ditangani di pemanggil
-        const errBody = await resp.text();
-        throw new Error(`AI proxy error ${resp.status}: ${errBody}`);
+        body: JSON.stringify({ text }) // ✅ HARUS object
       }
+    );
 
-      const j = await resp.json();
-      // format response: choices[0].message.content
-      const corrected = j?.choices?.[0]?.message?.content;
-      return (corrected || text).trim();
-    }catch(err){
-      // lempar agar caller bisa fallback ke kamus
-      throw err;
+    if(!resp.ok){
+      const err = await resp.text();
+      throw new Error(err);
     }
+
+    const data = await resp.json();
+
+    // server kamu mengembalikan { text: "hasil koreksi" }
+    return (data.text || text).trim();
+
+  }catch(err){
+    // lempar agar fallback ke kamus lokal
+    throw err;
   }
+}
+
 
   // ======================
   // 🔤 countAllVocabulary: hitung total kosakata di DICT
