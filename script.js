@@ -195,7 +195,7 @@
     if(!text) return text;
     try{
       const body = {
-        model: (typeof OPENAI_MODEL !== 'undefined' ? OPENAI_MODEL : 'gpt-4o-mini'),
+        model: (typeof OPENAI_MODEL !== 'undefined' ? OPENAI_MODEL : 'gpt-5.2-mini'),
         messages: [
         {
           role: 'system',
