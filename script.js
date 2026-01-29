@@ -582,7 +582,7 @@ function matchPrefixDaerah(it, prefix, lang){
     if($('useAI').checked){
       try{
         translated = await callOpenAIcorrect(translated);
-        $('log').textContent = 'Kalimat dikoreksi: ${corrected}';
+        $('log').textContent = 'Kalimat dikoreksi oleh GPT';
       }catch(e){
         $('log').textContent = '❌ AI Error: ' + e.message;
       }
