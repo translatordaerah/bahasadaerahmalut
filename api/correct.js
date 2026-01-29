@@ -1,4 +1,3 @@
-// api/correct.js
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -8,63 +7,39 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'OPENAI_API_KEY missing' });
   }
 
+  const { text } = req.body;
+  if (!text) {
+    return res.status(400).json({ error: 'Text is required' });
+  }
+
   try {
-    let input;
-
-    // 🔹 KASUS 1: dari QUIZ (pakai messages)
-    if (Array.isArray(req.body.messages)) {
-      input = [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: req.body.messages
-                .map(m => m.content)
-                .join("\n")
-            }
-          ]
-        }
-      ];
-    }
-
-    // 🔹 KASUS 2: dari TRANSLATOR (sudah input)
-    else if (req.body.input) {
-      input = req.body.input;
-    }
-
-    // 🔴 FORMAT TIDAK VALID
-    else {
-      return res.status(400).json({
-        error: "Invalid payload: expected 'messages' or 'input'"
-      });
-    }
-
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-5.2-mini",
-        input,
-        max_output_tokens: req.body.max_tokens || 800
+        model: 'gpt-5.2-mini',
+        input: `Perbaiki tata bahasa Bahasa Indonesia berikut agar baku dan alami, 
+jika sudah benar jangan diubah:
+
+"${text}"
+
+Jawab HANYA dengan hasil kalimat koreksi tanpa penjelasan.`,
+        max_output_tokens: 100
       })
     });
 
     const data = await response.json();
 
-    const text =
+    const corrected =
       data.output_text ||
       data.output?.[0]?.content?.[0]?.text ||
-      '';
+      text;
 
-    // 🔁 BIKIN KOMPATIBEL DENGAN KODE QUIZ & TRANSLATOR
     return res.status(200).json({
-      choices: [
-        { message: { content: text } }
-      ]
+      text: corrected.trim()
     });
 
   } catch (err) {
