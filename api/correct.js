@@ -24,25 +24,7 @@ export default async function handler(req, res) {
           },
           {
             role: "user",
-            content: `
-Tugasmu adalah MEMBAKUKAN kalimat Bahasa Indonesia sesuai kaidah KBBI.
-
-ATURAN:
-- Tambahkan preposisi yang hilang (ke, di, dari)
-- Ubah struktur lisan menjadi baku
-- Kapitalisasi awal kalimat
-- Tambahkan tanda titik jika perlu
-- JANGAN mengulang kalimat yang tidak baku
-
-Contoh:
-Input: aku pergi pasar
-Output: Aku pergi ke pasar.
-
-Sekarang perbaiki:
-"${text}"
-
-Jawab HANYA dengan satu kalimat hasil akhir.
-`
+            content: `'Kamu adalah korektor tata bahasa Indonesia. Perbaiki ejaan dan tata bahasa tanpa mengubah makna.`
           }
         ],
         temperature: 0.2,
@@ -62,4 +44,5 @@ Jawab HANYA dengan satu kalimat hasil akhir.
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
 
