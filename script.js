@@ -202,7 +202,10 @@ async function callOpenAIcorrect(text){
     messages: [
       {
         role:'system',
-        content:'Perbaiki tata bahasa tanpa mengubah kata lokal.'
+        content:
+        `Perbaiki tata bahasa dan susunan kalimat.
+        JANGAN mengubah, menerjemahkan, atau mengganti kata bahasa daerah.
+        Jika kalimat sudah benar, kembalikan apa adanya.`
       },
       {
         role:'user',
