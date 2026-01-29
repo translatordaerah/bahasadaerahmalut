@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: req.body.model || 'GPT-5.2',
+        model: req.body.model || 'gpt-4o-mini',
         input: req.body.messages?.map(m => m.content).join('\n')
       })
     });
@@ -45,4 +45,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
 
