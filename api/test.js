@@ -4,14 +4,17 @@ export default async function handler(req, res) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
     },
     body: JSON.stringify({
       model: "gpt-5.2-mini",
       max_output_tokens: 50,
-      input: "Tes koneksi GPT",
-    }),
+      input: "Tes koneksi GPT"
+    })
   });
 
-  res.status(200).json(await r.json());
+  const data = await r.json();
+  res.status(200).json(data);
 }
+
+
