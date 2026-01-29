@@ -9,17 +9,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://api.openai.com/v1/responses', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: req.body.model || 'gpt-4.1-mini',
-        input: req.body.messages
-      })
-    });
+    const response = await fetch("https://api.openai.com/v1/responses", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+  },
+  body: JSON.stringify({
+    model: "gpt-5.2-mini",
+    max_output_tokens: 200,
+    input: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: req.body.messages
+              .map(m => m.content)
+              .join("\n")
+          }
+        ]
+      }
+    ]
+  })
+});
+
 
     const data = await response.json();
 
@@ -39,3 +53,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: err.message });
   }
 }
+
