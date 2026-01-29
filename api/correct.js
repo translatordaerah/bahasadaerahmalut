@@ -45,6 +45,12 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    // 🔍 DEBUG LOG
+    console.log(
+      "RAW OPENAI RESPONSE:",
+      JSON.stringify(data, null, 2)
+    );
+    
     let corrected = text;
 
     if (Array.isArray(data.output)) {
@@ -69,6 +75,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
 
 
 
