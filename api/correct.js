@@ -45,19 +45,30 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    const corrected =
-      data.output_text ||
-      data.output?.[0]?.content?.[0]?.text ||
-      text;
+    let corrected = text;
 
-    return res.status(200).json({
-      text: corrected.trim()
-    });
+    if (Array.isArray(data.output)) {
+      for (const item of data.output) {
+        if (Array.isArray(item.content)) {
+          for (const c of item.content) {
+            if (c.type === "output_text" && c.text) {
+              corrected = c.text;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+   return res.status(200).json({
+    text: corrected.trim()
+  });
 
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
 
 
