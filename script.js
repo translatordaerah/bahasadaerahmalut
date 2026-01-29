@@ -197,36 +197,55 @@ async function callOpenAIcorrect(text){
   const controller = new AbortController();
   setTimeout(()=>controller.abort(), 15000);
 
-  const body = {
+  // 🔹 PROMPT KHUSUS KOREKSI BAHASA INDONESIA
+  const payload = {
     model: OPENAI_MODEL,
-    messages: [
+    input: [
       {
-          role: 'system',
-          content:
-            'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata bahasa agar lebih alami **tanpa mengubah arti atau kata utama yang sudah diterjemahkan dari kamus lokal**. Jangan ganti kata dasar atau istilah lokal. Jika kalimat sudah wajar, biarkan sama.'
-        },
-        {
-          role: 'user',
-          content: `Perhalus kalimat hasil terjemahan ini agar lebih alami tanpa mengubah maknanya: "${text}".`
-        }
-    ]
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text:
+`Perbaiki kalimat Bahasa Indonesia berikut agar sesuai tata bahasa baku.
+Tambahkan kata hubung atau preposisi yang hilang (misalnya "ke", "di", "dari").
+JANGAN mengubah makna.
+JANGAN menambah informasi baru.
+JANGAN menjelaskan apa pun.
+Kembalikan HANYA kalimat hasil koreksi.
+
+Kalimat:
+${text}`
+          }
+        ]
+      }
+    ],
+    max_output_tokens: 60
   };
 
   const resp = await fetch(API_PROXY_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body),
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
     signal: controller.signal
   });
 
   if(!resp.ok){
-  const err = await resp.text();
-  throw new Error(err);
+    const err = await resp.text();
+    throw new Error(err);
+  }
+
+  const data = await resp.json();
+
+  // ✅ AMBIL TEKS OUTPUT GPT-5 DENGAN AMAN
+  const corrected =
+    data.output_text ||
+    data.output?.[0]?.content?.[0]?.text ||
+    text;
+
+  return corrected.trim();
 }
 
-  const j = await resp.json();
-  return j?.choices?.[0]?.message?.content || text;
-}
 
 
 
