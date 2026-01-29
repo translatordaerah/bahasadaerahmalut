@@ -51,20 +51,27 @@ export default async function handler(req, res) {
       JSON.stringify(data, null, 2)
     );
     
-    let corrected = text;
+let corrected = text;
 
-    if (Array.isArray(data.output)) {
-      for (const item of data.output) {
-        if (Array.isArray(item.content)) {
-          for (const c of item.content) {
-            if (c.type === "output_text" && c.text) {
-              corrected = c.text;
-              break;
-            }
-          }
+// ✅ format resmi & paling stabil
+if (typeof data.output_text === 'string' && data.output_text.trim()) {
+  corrected = data.output_text.trim();
+}
+
+// 🔁 fallback lama (kalau ada)
+else if (Array.isArray(data.output)) {
+  for (const item of data.output) {
+    if (Array.isArray(item.content)) {
+      for (const c of item.content) {
+        if (c.type === "output_text" && c.text) {
+          corrected = c.text.trim();
+          break;
         }
       }
     }
+  }
+}
+
 
    return res.status(200).json({
     text: corrected.trim()
@@ -75,6 +82,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
 
 
 
