@@ -195,7 +195,7 @@ async function callOpenAIcorrect(text){
   if(!text) return text;
 
   const controller = new AbortController();
-  setTimeout(()=>controller.abort(), 8000);
+  setTimeout(()=>controller.abort(), 4000);
 
   const body = {
     model: req.body.model || 'gpt-4.1-mini',
