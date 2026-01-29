@@ -191,48 +191,39 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
-// ======================
-// 🧠 GPT KOREKSI HASIL TERJEMAHAN
-// ======================
-async function callOpenAIcorrect(text){
-  if(!text) return text;
+async function callOpenAIcorrectInput(text){
+  // fallback aman kalau AI tidak dikonfigurasi
+  if(!text || typeof OPENAI_MODEL === 'undefined') return text;
 
-  const payload = {
-    model: OPENAI_MODEL,
-    input: [
-      {
+  try{
+    const payload = {
+      model: OPENAI_MODEL,
+      input: [{
         role: "user",
         content: [{
           type: "text",
-          text: `
-Rapikan hasil terjemahan berikut.
-JANGAN menerjemahkan ulang.
-JANGAN mengubah makna.
-Kembalikan HANYA hasil perbaikan.
-
-Teks:
-${text}
-          `
+          text: `Perbaiki kalimat Bahasa Indonesia berikut tanpa mengubah makna:\n${text}`
         }]
-      }
-    ],
-    max_output_tokens: 80
-  };
+      }],
+      max_output_tokens: 60
+    };
 
-  const resp = await fetch(API_PROXY_URL, {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(payload)
-  });
+    const resp = await fetch(API_PROXY_URL, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
 
-  const data = await resp.json();
+    const data = await resp.json();
 
-  // 🔴 INI YANG SEBELUMNYA SALAH
-  return (
-    data.choices?.[0]?.message?.content ||
-    data.output_text ||
-    text
-  ).trim();
+    return (
+      data.choices?.[0]?.message?.content ||
+      text
+    ).trim();
+  }catch(e){
+    console.warn('AI input correction skipped:', e);
+    return text;
+  }
 }
 
 
@@ -580,30 +571,33 @@ function matchPrefixDaerah(it, prefix, lang){
     
     $('outputText').value = translated;
 
-    // translate simple: langsung kamus (tanpa AI)
-    $('translateSimpleBtn')?.addEventListener('click', ()=>{
-      const raw = normalizeTextForLookup(($('inputText')?.value || '').trim());
-      if(!raw) return;
-      const dir = ($('direction')?.value) || 'id-to-ter';
-      $('outputText').value = translateWithMap(raw, dir);
-      $('log').textContent = 'Terjemah langsung dari kamus lokal.';
-    });
+    // 🔁 translate simple (tanpa AI)
+$('translateSimpleBtn')?.addEventListener('click', ()=>{
+  const raw = normalizeTextForLookup(($('inputText')?.value || '').trim());
+  if(!raw) return;
+  const dir = ($('direction')?.value) || 'id-to-ter';
+  $('outputText').value = translateWithMap(raw, dir);
+  $('log').textContent = 'Terjemah langsung dari kamus lokal.';
+});
 
-    $('searchPrefixInd')?.addEventListener('input', ()=>{
-    $('searchPrefixLoc').value = ''; // matikan yang lain
-    renderCategory(
-      $('categorySelect')?.value,
-      $('themeSelect')?.value
-    );
-  });
+// 🔤 prefix search Indonesia
+$('searchPrefixInd')?.addEventListener('input', ()=>{
+  $('searchPrefixLoc').value = '';
+  renderCategory(
+    $('categorySelect')?.value,
+    $('themeSelect')?.value
+  );
+});
 
-  $('searchPrefixLoc')?.addEventListener('input', ()=>{
-    $('searchPrefixInd').value = ''; // matikan yang lain
-    renderCategory(
-      $('categorySelect')?.value,
-      $('themeSelect')?.value
-    );
-  });
+// 🌍 prefix search Daerah
+$('searchPrefixLoc')?.addEventListener('input', ()=>{
+  $('searchPrefixInd').value = '';
+  renderCategory(
+    $('categorySelect')?.value,
+    $('themeSelect')?.value
+  );
+});
+
 
 
     // clear
