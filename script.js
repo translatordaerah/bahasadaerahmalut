@@ -198,7 +198,7 @@ async function callOpenAIcorrect(text){
   setTimeout(()=>controller.abort(), 8000);
 
   const body = {
-    model: OPENAI_MODEL || 'gpt-4o-mini',
+    model: req.body.model || 'gpt-4.1-mini',
     messages: [
       {
         role:'system',
