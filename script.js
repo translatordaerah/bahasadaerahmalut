@@ -191,7 +191,10 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
-async function callOpenAIcorrectInput(text){
+// ======================
+// 🧠 GPT KOREKSI HASIL TERJEMAHAN
+// ======================
+async function callOpenAIcorrect(text){
   if(!text) return text;
 
   const payload = {
@@ -202,34 +205,36 @@ async function callOpenAIcorrectInput(text){
         content: [{
           type: "text",
           text: `
-Perbaiki kalimat Bahasa Indonesia berikut agar baku dan jelas.
+Rapikan hasil terjemahan berikut.
+JANGAN menerjemahkan ulang.
 JANGAN mengubah makna.
-JANGAN menambah informasi.
-Kembalikan HANYA kalimat hasil koreksi.
+Kembalikan HANYA hasil perbaikan.
 
-Kalimat:
+Teks:
 ${text}
           `
         }]
       }
     ],
-    max_output_tokens: 60
+    max_output_tokens: 80
   };
 
   const resp = await fetch(API_PROXY_URL, {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
+    headers: { "Content-Type":"application/json" },
     body: JSON.stringify(payload)
   });
 
   const data = await resp.json();
 
+  // 🔴 INI YANG SEBELUMNYA SALAH
   return (
+    data.choices?.[0]?.message?.content ||
     data.output_text ||
-    data.output?.[0]?.content?.[0]?.text ||
     text
   ).trim();
 }
+
 
 
   // ======================
