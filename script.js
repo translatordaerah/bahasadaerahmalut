@@ -191,63 +191,60 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
+// ======================
+// 🧠 callOpenAIcorrect
+// KOREKSI BAHASA INDONESIA (SEBELUM TERJEMAH)
+// ======================
 async function callOpenAIcorrect(text){
   if(!text) return text;
 
-  const controller = new AbortController();
-  setTimeout(()=>controller.abort(), 15000);
-
-  // 🔹 PROMPT KHUSUS KOREKSI BAHASA INDONESIA
-  const payload = {
-    model: OPENAI_MODEL,
-    input: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text:
+  try{
+    const body = {
+      model: OPENAI_MODEL || "gpt-5.2-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Kamu adalah asisten bahasa Indonesia. Tugasmu memperbaiki tata bahasa agar baku dan alami. Jangan menerjemahkan ke bahasa lain. Jangan mengubah makna. Jangan menambah informasi."
+        },
+        {
+          role: "user",
+          content:
 `Perbaiki kalimat Bahasa Indonesia berikut agar sesuai tata bahasa baku.
-Tambahkan kata hubung atau preposisi yang hilang (misalnya "ke", "di", "dari").
-JANGAN mengubah makna.
-JANGAN menambah informasi baru.
-JANGAN menjelaskan apa pun.
-Kembalikan HANYA kalimat hasil koreksi.
+Tambahkan kata hubung atau preposisi yang hilang (misalnya: ke, di, dari).
+Kembalikan HANYA hasil koreksi.
 
 Kalimat:
 ${text}`
-          }
-        ]
-      }
-    ],
-    max_output_tokens: 60
-  };
+        }
+      ],
+      temperature: 0
+    };
 
-  const resp = await fetch(API_PROXY_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    signal: controller.signal
-  });
+    const resp = await fetch(API_PROXY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
 
-  if(!resp.ok){
-    const err = await resp.text();
-    throw new Error(err);
+    if(!resp.ok){
+      const err = await resp.text();
+      throw new Error(err);
+    }
+
+    const data = await resp.json();
+
+    // 🔑 KOMPATIBEL DENGAN BACKEND KAMU
+    const corrected =
+      data?.choices?.[0]?.message?.content ||
+      text;
+
+    return corrected.trim();
+
+  }catch(err){
+    throw err;
   }
-
-  const data = await resp.json();
-
-  // ✅ AMBIL TEKS OUTPUT GPT-5 DENGAN AMAN
-  const corrected =
-    data.output_text ||
-    data.output?.[0]?.content?.[0]?.text ||
-    text;
-
-  return corrected.trim();
 }
-
-
-
 
   // ======================
   // 🔤 countAllVocabulary: hitung total kosakata di DICT
