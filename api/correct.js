@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+        model: process.env.OPENAI_MODEL || 'gpt-5.2-mini',
         messages: [
           {
             role: "system",
@@ -62,3 +62,4 @@ Jawab HANYA dengan satu kalimat hasil akhir.
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
