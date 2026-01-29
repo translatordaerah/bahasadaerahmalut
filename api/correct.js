@@ -21,10 +21,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || 'gpt-5.2-mini', // ✅ auto update
-        input: `Perbaiki tata bahasa Bahasa Indonesia berikut agar baku dan alami.
-Jika sudah benar, jangan diubah.
-
-"${text}"
+        input: `Perbaiki tata bahasa Bahasa Indonesia berikut agar baku dan alami. "${text}"
 
 Jawab HANYA dengan hasil kalimat koreksi tanpa penjelasan.`,
         max_output_tokens: 120
@@ -47,3 +44,4 @@ Jawab HANYA dengan hasil kalimat koreksi tanpa penjelasan.`,
     return res.status(500).json({ error: 'GPT error' });
   }
 }
+
