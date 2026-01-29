@@ -20,14 +20,14 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-5.2-mini',
-        input: `Perbaiki tata bahasa Bahasa Indonesia berikut agar baku dan alami, 
-jika sudah benar jangan diubah:
+        model: process.env.OPENAI_MODEL || 'gpt-5.2-mini', // ✅ auto update
+        input: `Perbaiki tata bahasa Bahasa Indonesia berikut agar baku dan alami.
+Jika sudah benar, jangan diubah.
 
 "${text}"
 
 Jawab HANYA dengan hasil kalimat koreksi tanpa penjelasan.`,
-        max_output_tokens: 100
+        max_output_tokens: 120
       })
     });
 
@@ -44,6 +44,6 @@ Jawab HANYA dengan hasil kalimat koreksi tanpa penjelasan.`,
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: 'GPT error' });
   }
 }
