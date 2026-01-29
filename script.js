@@ -201,13 +201,14 @@ async function callOpenAIcorrect(text){
     model: OPENAI_MODEL,
     messages: [
       {
-        role:'system',
-        content:
-        `Perbaiki tata bahasa dan susunan kalimat.
-JANGAN mengubah, menerjemahkan, atau mengganti kata bahasa daerah.
-Jika kalimat sudah benar, kembalikan apa adanya.`
-      },
-      { role:'user', content:text }
+          role: 'system',
+          content:
+            'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata bahasa agar lebih alami **tanpa mengubah arti atau kata utama yang sudah diterjemahkan dari kamus lokal**. Jangan ganti kata dasar atau istilah lokal. Jika kalimat sudah wajar, biarkan sama.'
+        },
+        {
+          role: 'user',
+          content: `Perhalus kalimat hasil terjemahan ini agar lebih alami tanpa mengubah maknanya: "${text}".`
+        }
     ]
   };
 
