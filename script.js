@@ -562,7 +562,7 @@ function matchPrefixDaerah(it, prefix, lang){
     if($('useAI').checked){
       try{
         translated = await callOpenAIcorrect(translated);
-        $('log').textContent = '✅ Kalimat diperhalus oleh GPT';
+        $('log').textContent = 'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata bahasa agar lebih alami **tanpa mengubah arti atau kata utama yang sudah diterjemahkan dari kamus lokal**. Jangan ganti kata dasar atau istilah lokal. Jika kalimat sudah wajar, biarkan sama.';
       }catch(e){
         $('log').textContent = '❌ AI Error: ' + e.message;
       }
