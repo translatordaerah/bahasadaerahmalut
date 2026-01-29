@@ -191,33 +191,26 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
-async function callOpenAIcorrect(text){
+async function callOpenAIcorrectInput(text){
   if(!text) return text;
 
-  const controller = new AbortController();
-  setTimeout(()=>controller.abort(), 15000);
-
-  // 🔹 PROMPT KHUSUS KOREKSI BAHASA INDONESIA
   const payload = {
     model: OPENAI_MODEL,
     input: [
       {
         role: "user",
-        content: [
-          {
-            type: "text",
-            text:
-`Perbaiki kalimat Bahasa Indonesia berikut agar sesuai tata bahasa baku.
-Tambahkan kata hubung atau preposisi yang hilang (misalnya "ke", "di", "dari").
+        content: [{
+          type: "text",
+          text: `
+Perbaiki kalimat Bahasa Indonesia berikut agar baku dan jelas.
 JANGAN mengubah makna.
-JANGAN menambah informasi baru.
-JANGAN menjelaskan apa pun.
+JANGAN menambah informasi.
 Kembalikan HANYA kalimat hasil koreksi.
 
 Kalimat:
-${text}`
-          }
-        ]
+${text}
+          `
+        }]
       }
     ],
     max_output_tokens: 60
@@ -225,28 +218,18 @@ ${text}`
 
   const resp = await fetch(API_PROXY_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    signal: controller.signal
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
   });
-
-  if(!resp.ok){
-    const err = await resp.text();
-    throw new Error(err);
-  }
 
   const data = await resp.json();
 
-  // ✅ AMBIL TEKS OUTPUT GPT-5 DENGAN AMAN
-  const corrected =
+  return (
     data.output_text ||
     data.output?.[0]?.content?.[0]?.text ||
-    text;
-
-  return corrected.trim();
+    text
+  ).trim();
 }
-
-
 
 
   // ======================
@@ -385,7 +368,6 @@ function sortAZByInd(list){
   );
 }
 
-
   // ======================
   // 🔠 Matching prefix functions
   // ======================
@@ -399,7 +381,6 @@ function matchPrefixDaerah(it, prefix, lang){
   const val = it[lang];
   return val && val.toLowerCase().startsWith(prefix);
 }
-
 
   // ======================
   // 🪧 renderCategory: tampil kartu, pencarian, dan audio 1x/2x
@@ -575,25 +556,24 @@ function matchPrefixDaerah(it, prefix, lang){
 
     const dir = $('direction')?.value || 'id-to-ter';
 
-    // 1️⃣ TERJEMAH DENGAN KAMUS DULU
-    let translated = translateWithMap(raw, dir);
-
-    // 2️⃣ GPT HANYA MEMPERHALUS
+    // 1️⃣ GPT koreksi INPUT (Indonesia)
+    let correctedInput = raw;
+    
     if($('useAI').checked){
-      try{
-        translated = await callOpenAIcorrect(translated);
-        $('log').textContent = 'Kalimat dikoreksi oleh GPT';
-      }catch(e){
-        $('log').textContent = '❌ AI Error: ' + e.message;
-      }
-    } else {
-      $('log').textContent = 'Mode tanpa AI';
+      correctedInput = await callOpenAIcorrectInput(raw);
+      $('log').textContent = 'Input dikoreksi GPT';
     }
-
+    
+    // 2️⃣ Terjemahkan dengan kamus
+    let translated = translateWithMap(correctedInput, dir);
+    
+    // 3️⃣ GPT hanya memperhalus hasil terjemahan (OPSIONAL)
+    if($('useAI').checked){
+      translated = await callOpenAIcorrect(translated);
+      $('log').textContent = 'Input & hasil diterjemahkan + dikoreksi GPT';
+    }
+    
     $('outputText').value = translated;
-    $('translateBtn').disabled = false;
-  });
-
 
     // translate simple: langsung kamus (tanpa AI)
     $('translateSimpleBtn')?.addEventListener('click', ()=>{
