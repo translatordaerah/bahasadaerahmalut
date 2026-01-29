@@ -191,52 +191,47 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
-async function callOpenAIcorrect(text){
-  if(!text) return text;
+  async function callOpenAIcorrect(text){
+    if(!text) return text;
+    try{
+      const body = {
+        model: (typeof OPENAI_MODEL !== 'undefined' ? OPENAI_MODEL : 'gpt-4o-mini'),
+        messages: [
+        {
+          role: 'system',
+          content:
+            'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata bahasa agar lebih alami **tanpa mengubah arti atau kata utama yang sudah diterjemahkan dari kamus lokal**. Jangan ganti kata dasar atau istilah lokal. Jika kalimat sudah wajar, biarkan sama.'
+        },
+        {
+          role: 'user',
+          content: `Perhalus kalimat hasil terjemahan ini agar lebih alami tanpa mengubah maknanya: "${text}".`
+        }
 
-  const prompt = `
-Perbaiki kalimat Bahasa Indonesia berikut agar sesuai tata bahasa baku dan penulisan yang benar.
+        ],
+        temperature: 0
+      };
 
-Aturan:
-- Gunakan Bahasa Indonesia
-- Jangan menerjemahkan ke bahasa lain
-- Jangan mengubah makna
-- Jangan menambah informasi
-- Tambahkan kata hubung/preposisi yang hilang (ke, di, dari, dll)
-- Kembalikan HANYA hasil koreksi
+      const resp = await fetch((typeof API_PROXY_URL !== 'undefined' ? API_PROXY_URL : '/api/correct'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
 
-Kalimat:
-${text}
-`.trim();
+      if(!resp.ok){
+        // jika proxy/AI gagal, throw untuk ditangani di pemanggil
+        const errBody = await resp.text();
+        throw new Error(`AI proxy error ${resp.status}: ${errBody}`);
+      }
 
-  try{
-    const resp = await fetch(API_PROXY_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "gpt-5.2-mini",
-        input: prompt,
-        max_tokens: 100
-      })
-    });
-
-    if(!resp.ok){
-      throw new Error(await resp.text());
+      const j = await resp.json();
+      // format response: choices[0].message.content
+      const corrected = j?.choices?.[0]?.message?.content;
+      return (corrected || text).trim();
+    }catch(err){
+      // lempar agar caller bisa fallback ke kamus
+      throw err;
     }
-
-    const data = await resp.json();
-
-    return (
-      data?.choices?.[0]?.message?.content ||
-      text
-    ).trim();
-
-  }catch(err){
-    console.error("GPT error:", err);
-    return text;
   }
-}
-
 
   // ======================
   // 🔤 countAllVocabulary: hitung total kosakata di DICT
@@ -556,34 +551,28 @@ function matchPrefixDaerah(it, prefix, lang){
 
     // translate utama: ambil dari kamus dulu, lalu (opsional) minta GPT memperbaiki
     $('translateBtn')?.addEventListener('click', async ()=>{
-    const raw = ($('inputText')?.value || '').trim();
-    if(!raw) return;
+      const raw = ($('inputText')?.value || '').trim();
+      if(!raw) return;
+      $('log').textContent = '⏳Memproses...';
 
-    $('translateBtn').disabled = true;
-    $('log').textContent = '⏳ Memproses...';
+      const dir = ($('direction')?.value) || 'id-to-ter';
+      // 1) terjemahkan dulu dari kamus lokal
+      let source=raw;
 
-    const dir = $('direction')?.value || 'id-to-ter';
+      if($('useAI').checked){
+        try{
+          const corrected=await callOpenAIcorrect(raw);
+          source=corrected;
+          $('log').textContent=`Kalimat dikoreksi: ${corrected}`;
+        }catch(err){
+          $('log').textContent='⚠️ GPT sibuk, hasil dari kamus lokal digunakan.';
+        }
+      }else{
+        $('log').textContent='Mode tanpa AI (langsung kamus)';
+      }
 
-let inputText = raw;
-
-// 1️⃣ GPT KOREKSI BAHASA INDONESIA DULU
-if($('useAI').checked){
-  try{
-    inputText = await callOpenAIcorrect(raw);
-    $('log').textContent = '✍️ Kalimat Indonesia dikoreksi oleh GPT';
-  }catch(e){
-    $('log').textContent = '❌ AI Error: ' + e.message;
-  }
-}
-
-// 2️⃣ BARU DITERJEMAHKAN DENGAN KAMUS
-const translated = translateWithMap(inputText, dir);
-
-$('outputText').value = translated;
-$('translateBtn').disabled = false;
-
-  });
-
+      $('outputText').value=translateWithMap(source, dir);
+    });
 
     // translate simple: langsung kamus (tanpa AI)
     $('translateSimpleBtn')?.addEventListener('click', ()=>{
