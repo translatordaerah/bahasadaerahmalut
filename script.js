@@ -191,10 +191,6 @@
   // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
   // mengirim teks hasil kamus, menerima teks yang diperbaiki
   // ======================
-// ======================
-// 🧠 callOpenAIcorrect
-// KOREKSI BAHASA INDONESIA (SEBELUM TERJEMAH)
-// ======================
 async function callOpenAIcorrect(text){
   if(!text) return text;
 
@@ -572,23 +568,24 @@ function matchPrefixDaerah(it, prefix, lang){
 
     const dir = $('direction')?.value || 'id-to-ter';
 
-    // 1️⃣ TERJEMAH DENGAN KAMUS DULU
-    let translated = translateWithMap(raw, dir);
+let inputText = raw;
 
-    // 2️⃣ GPT HANYA MEMPERHALUS
-    if($('useAI').checked){
-      try{
-        translated = await callOpenAIcorrect(translated);
-        $('log').textContent = 'Kalimat dikoreksi oleh GPT';
-      }catch(e){
-        $('log').textContent = '❌ AI Error: ' + e.message;
-      }
-    } else {
-      $('log').textContent = 'Mode tanpa AI';
-    }
+// 1️⃣ GPT KOREKSI BAHASA INDONESIA DULU
+if($('useAI').checked){
+  try{
+    inputText = await callOpenAIcorrect(raw);
+    $('log').textContent = '✍️ Kalimat Indonesia dikoreksi oleh GPT';
+  }catch(e){
+    $('log').textContent = '❌ AI Error: ' + e.message;
+  }
+}
 
-    $('outputText').value = translated;
-    $('translateBtn').disabled = false;
+// 2️⃣ BARU DITERJEMAHKAN DENGAN KAMUS
+const translated = translateWithMap(inputText, dir);
+
+$('outputText').value = translated;
+$('translateBtn').disabled = false;
+
   });
 
 
