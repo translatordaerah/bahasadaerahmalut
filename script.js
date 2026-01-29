@@ -194,53 +194,49 @@
 async function callOpenAIcorrect(text){
   if(!text) return text;
 
-  try{
-    const body = {
-      model: OPENAI_MODEL || "gpt-5.2-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Kamu adalah asisten bahasa Indonesia. Tugasmu memperbaiki tata bahasa agar baku dan alami. Jangan menerjemahkan ke bahasa lain. Jangan mengubah makna. Jangan menambah informasi."
-        },
-        {
-          role: "user",
-          content:
-`Perbaiki kalimat Bahasa Indonesia berikut agar sesuai tata bahasa baku.
-Tambahkan kata hubung atau preposisi yang hilang (misalnya: ke, di, dari).
-Kembalikan HANYA hasil koreksi.
+  const prompt = `
+Perbaiki kalimat Bahasa Indonesia berikut agar sesuai tata bahasa baku dan penulisan yang benar.
+
+Aturan:
+- Gunakan Bahasa Indonesia
+- Jangan menerjemahkan ke bahasa lain
+- Jangan mengubah makna
+- Jangan menambah informasi
+- Tambahkan kata hubung/preposisi yang hilang (ke, di, dari, dll)
+- Kembalikan HANYA hasil koreksi
 
 Kalimat:
-${text}`
-        }
-      ],
-      temperature: 0
-    };
+${text}
+`.trim();
 
+  try{
     const resp = await fetch(API_PROXY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        model: "gpt-5.2-mini",
+        input: prompt,
+        max_tokens: 100
+      })
     });
 
     if(!resp.ok){
-      const err = await resp.text();
-      throw new Error(err);
+      throw new Error(await resp.text());
     }
 
     const data = await resp.json();
 
-    // 🔑 KOMPATIBEL DENGAN BACKEND KAMU
-    const corrected =
+    return (
       data?.choices?.[0]?.message?.content ||
-      text;
-
-    return corrected.trim();
+      text
+    ).trim();
 
   }catch(err){
-    throw err;
+    console.error("GPT error:", err);
+    return text;
   }
 }
+
 
   // ======================
   // 🔤 countAllVocabulary: hitung total kosakata di DICT
