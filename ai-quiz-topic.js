@@ -5,7 +5,7 @@
   'use strict';
 
   const API_PROXY = (typeof API_PROXY_URL !== 'undefined') ? API_PROXY_URL : '/api/correct';
-  const MODEL = (typeof OPENAI_MODEL !== 'undefined') ? OPENAI_MODEL : 'gpt-4.1-mini';
+  const MODEL = (typeof OPENAI_MODEL !== 'undefined') ? OPENAI_MODEL : 'gpt-5.2-mini';
   const FETCH_TIMEOUT = 60000; // ms, diperpanjang sedikit untuk model yang lambat
   const MAX_RETRIES = 4; // jumlah percobaan ulang pada error sementara
 
@@ -619,4 +619,5 @@
   init();
 
 })();
+
 
