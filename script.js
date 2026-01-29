@@ -195,24 +195,20 @@ async function callOpenAIcorrect(text){
   if(!text) return text;
 
   const controller = new AbortController();
-  setTimeout(()=>controller.abort(), 4000);
+  setTimeout(()=>controller.abort(), 15000);
 
   const body = {
-    model: req.body.model || 'gpt-4.1-mini',
+    model: OPENAI_MODEL,
     messages: [
       {
         role:'system',
         content:
         `Perbaiki tata bahasa dan susunan kalimat.
-        JANGAN mengubah, menerjemahkan, atau mengganti kata bahasa daerah.
-        Jika kalimat sudah benar, kembalikan apa adanya.`
+JANGAN mengubah, menerjemahkan, atau mengganti kata bahasa daerah.
+Jika kalimat sudah benar, kembalikan apa adanya.`
       },
-      {
-        role:'user',
-        content:text
-      }
-    ],
-    temperature: 0
+      { role:'user', content:text }
+    ]
   };
 
   const resp = await fetch(API_PROXY_URL, {
@@ -227,6 +223,7 @@ async function callOpenAIcorrect(text){
   const j = await resp.json();
   return j?.choices?.[0]?.message?.content || text;
 }
+
 
 
   // ======================
