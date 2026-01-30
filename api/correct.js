@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-5.2-mini",
+        model: "gpt-5.2",
         temperature: 0.2,
         max_tokens: 120,
         messages: [
@@ -54,3 +54,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
