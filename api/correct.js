@@ -17,22 +17,30 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || 'gpt-5.2-mini',
+        temperature: 0.2,
+        max_tokens: 100,
         messages: [
           {
             role: "system",
-            content: "Kamu adalah editor Bahasa Indonesia baku sesuai KBBI."
+            content:
+              "Kamu adalah korektor tata bahasa Bahasa Indonesia baku sesuai KBBI. " +
+              "Tugasmu hanya memperbaiki ejaan, struktur kalimat, dan kata penghubung. " +
+              "JANGAN memberi penjelasan. JANGAN mengubah makna."
           },
           {
             role: "user",
-            content: `'Kamu adalah korektor tata bahasa Indonesia. Perbaiki ejaan dan tata bahasa tanpa mengubah makna.`
+            content: text
           }
-        ],
-        temperature: 0.2,
-        max_tokens: 80
+        ]
       })
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error(data);
+      return res.status(500).json({ error: 'OpenAI error', detail: data });
+    }
 
     const corrected =
       data.choices?.[0]?.message?.content?.trim() || text;
@@ -41,6 +49,6 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'GPT error' });
+    return res.status(500).json({ error: 'GPT request failed' });
   }
 }
