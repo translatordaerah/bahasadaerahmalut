@@ -6,22 +6,20 @@ export default async function handler(req, res) {
   }
 
   const { text } = req.body || {};
-  if (!text) {
+  if (!text || !text.trim()) {
     return res.status(400).json({ error: 'Text is required' });
   }
 
   try {
-    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+    const r = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-5.2",
-        temperature: 0.2,
-        max_tokens: 120,
-        messages: [
+        model: "gpt-4.1-mini",
+        input: [
           {
             role: "system",
             content:
@@ -33,7 +31,9 @@ export default async function handler(req, res) {
             role: "user",
             content: text
           }
-        ]
+        ],
+        max_output_tokens: 120,
+        temperature: 0.2
       })
     });
 
@@ -41,17 +41,18 @@ export default async function handler(req, res) {
 
     if (!r.ok) {
       console.error("OpenAI error:", data);
-      return res.status(500).json({ error: data });
+      return res.status(500).json({ error: "OpenAI error" });
     }
 
     const result =
-      data.choices?.[0]?.message?.content?.trim() || text;
+      data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
+      text;
 
-    return res.status(200).json({ text: result });
+    return res.status(200).json({ text: result.trim() });
 
   } catch (e) {
     console.error("API crash:", e);
     return res.status(500).json({ error: "Server error" });
   }
 }
-
