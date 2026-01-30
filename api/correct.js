@@ -1,31 +1,33 @@
+export const config = { runtime: 'nodejs' };
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { text } = req.body;
-  if (!text || !text.trim()) {
+  const { text } = req.body || {};
+  if (!text) {
     return res.status(400).json({ error: 'Text is required' });
   }
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || 'gpt-5.2-mini',
+        model: "gpt-5.2-mini",
         temperature: 0.2,
-        max_tokens: 100,
+        max_tokens: 120,
         messages: [
           {
             role: "system",
             content:
-              "Kamu adalah korektor tata bahasa Bahasa Indonesia baku sesuai KBBI. " +
-              "Tugasmu hanya memperbaiki ejaan, struktur kalimat, dan kata penghubung. " +
-              "JANGAN memberi penjelasan. JANGAN mengubah makna."
+              "Kamu adalah editor Bahasa Indonesia sesuai KBBI. " +
+              "Tugasmu hanya memperbaiki ejaan dan tata kalimat. " +
+              "JANGAN memberi penjelasan."
           },
           {
             role: "user",
@@ -35,20 +37,20 @@ export default async function handler(req, res) {
       })
     });
 
-    const data = await response.json();
+    const data = await r.json();
 
-    if (!response.ok) {
-      console.error(data);
-      return res.status(500).json({ error: 'OpenAI error', detail: data });
+    if (!r.ok) {
+      console.error("OpenAI error:", data);
+      return res.status(500).json({ error: data });
     }
 
-    const corrected =
+    const result =
       data.choices?.[0]?.message?.content?.trim() || text;
 
-    return res.status(200).json({ text: corrected });
+    return res.status(200).json({ text: result });
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'GPT request failed' });
+  } catch (e) {
+    console.error("API crash:", e);
+    return res.status(500).json({ error: "Server error" });
   }
 }
