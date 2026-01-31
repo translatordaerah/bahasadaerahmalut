@@ -187,52 +187,51 @@
     return out.join(" ");
   }
 
-async function callLanguageToolCorrect(text){
-  if(!text) return text;
+// ======================
+  // 🧠 callOpenAIcorrect: minta GPT perbaiki TATA KALIMAT (bukan terjemahan ulang)
+  // mengirim teks hasil kamus, menerima teks yang diperbaiki
+  // ======================
+  async function callOpenAIcorrect(text){
+    if(!text) return text;
+    try{
+      const body = {
+        model: (typeof OPENAI_MODEL !== 'undefined' ? OPENAI_MODEL : 'gpt-4o-mini'),
+        messages: [
+        {
+          role: 'system',
+          content:
+            'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata bahasa agar lebih alami **tanpa mengubah arti atau kata utama yang sudah diterjemahkan dari kamus lokal**. Jangan ganti kata dasar atau istilah lokal. Jika kalimat sudah wajar, biarkan sama.'
+        },
+        {
+          role: 'user',
+          content: `Perhalus kalimat hasil terjemahan ini agar lebih alami tanpa mengubah maknanya: "${text}".`
+        }
 
-  try{
-    const resp = await fetch("https://api.languagetool.org/v2/check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: new URLSearchParams({
-        text: text,
-        language: "id"
-      })
-    });
+        ],
+        temperature: 0
+      };
 
-    const data = await resp.json();
+      const resp = await fetch((typeof API_PROXY_URL !== 'undefined' ? API_PROXY_URL : '/api/correct'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
 
-    if(!data.matches || data.matches.length === 0){
-      return text; // sudah bagus
+      if(!resp.ok){
+        // jika proxy/AI gagal, throw untuk ditangani di pemanggil
+        const errBody = await resp.text();
+        throw new Error(`AI proxy error ${resp.status}: ${errBody}`);
+      }
+
+      const j = await resp.json();
+      // format response: choices[0].message.content
+      const corrected = j?.choices?.[0]?.message?.content;
+      return (corrected || text).trim();
+    }catch(err){
+      // lempar agar caller bisa fallback ke kamus
+      throw err;
     }
-
-    // 🔧 Terapkan koreksi satu per satu (aman)
-    let corrected = text;
-    let offsetFix = 0;
-
-    data.matches.forEach(m => {
-      if(!m.replacements || m.replacements.length === 0) return;
-
-      const start = m.offset + offsetFix;
-      const end = start + m.length;
-      const replacement = m.replacements[0].value;
-
-      corrected =
-        corrected.slice(0, start) +
-        replacement +
-        corrected.slice(end);
-
-      offsetFix += replacement.length - m.length;
-    });
-
-    return corrected;
-
-  }catch(err){
-    throw err;
   }
-}
 
   // ======================
   // 🔤 countAllVocabulary: hitung total kosakata di DICT
@@ -561,15 +560,13 @@ function matchPrefixDaerah(it, prefix, lang){
       let source=raw;
 
       if($('useAI').checked){
-      try{
-        const corrected = await callLanguageToolCorrect(raw);
-        source = corrected;
-        $('log').textContent = `Kalimat dirapikan: ${corrected}`;
-      }catch(err){
-        $('log').textContent = '⚠️ Grammar checker gagal, pakai kamus lokal.';
-      }
-    }
-
+        try{
+          const corrected=await callOpenAIcorrect(raw);
+          source=corrected;
+          $('log').textContent=`Kalimat dikoreksi: ${corrected}`;
+        }catch(err){
+          $('log').textContent='⚠️ GPT sibuk, hasil dari kamus lokal digunakan.';
+        }
       }else{
         $('log').textContent='Mode tanpa AI (langsung kamus)';
       }
