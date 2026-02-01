@@ -187,3 +187,39 @@ pre#log{white-space:pre-wrap}
   color: #ffffff;
   font-family: 'Times New Roman', Times, serif;
 }
+
+/* ===============================
+   FIX FRAME LATIHAN SOAL DI HP
+================================ */
+@media (max-width: 576px) {
+
+  body {
+    padding-bottom: 16px;
+  }
+
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  section {
+    margin-bottom: 16px;
+  }
+}
+
+html, body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 576px) {
+
+  .card {
+    border: 1.5px solid #d1d5db !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  }
+
+}
+
+
