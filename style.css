@@ -126,9 +126,9 @@ pre#log{white-space:pre-wrap}
 
 
 /* HP */
-@media (max-width: 575.98px) {
+@media (max-width: 505.98px) {
   .vocab-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
