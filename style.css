@@ -190,15 +190,39 @@ pre#log{white-space:pre-wrap}
 }
 
 /* ===============================
-   FIX FRAME LATIHAN SOAL DI HP
+   NAVBAR HP FIX (SELECT + QUIZ)
 ================================ */
-@media (max-width: 510px) {
+.nav-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  /* beri jarak dari tepi layar */
-  .card + .card {
-    margin-top: 12px;
+/* HP */
+@media (max-width: 576px) {
+
+  .nav-action {
+    flex-wrap: nowrap;
+  }
+
+  .direction-select {
+    width: 150px;      /* lebih kecil di HP */
+    font-size: 0.75rem;
+  }
+
+  .quiz-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  /* rapikan isi navbar kanan */
+  .custom-navbar .container {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }
+
 
 
 html, body {
