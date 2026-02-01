@@ -9,6 +9,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const userText =
+      req.body?.messages?.find(m => m.role === 'user')?.content || '';
+
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
@@ -17,14 +20,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        input: [
-          {
-            role: 'system',
-            content:
-              'Kamu adalah asisten bahasa. Tugasmu memperbaiki tata kalimat agar lebih alami tanpa mengubah arti atau kata utama dari kamus lokal.'
-          },
-          ...req.body.messages
-        ],
+        input: `Perbaiki tata bahasa agar lebih alami tanpa mengubah arti atau kata lokal berikut:\n\n${userText}`,
         temperature: 0
       })
     });
@@ -32,23 +28,22 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error(data);
-      return res.status(response.status).json(data);
+      console.error('OpenAI error:', data);
+      return res.status(500).json(data);
     }
 
-    // 🔑 normalisasi agar frontend TIDAK perlu diubah
     res.status(200).json({
       choices: [
         {
           message: {
-            content: data.output_text
+            content: data.output_text || userText
           }
         }
       ]
     });
 
   } catch (err) {
-    console.error(err);
+    console.error('Server error:', err);
     res.status(500).json({ error: err.message });
   }
 }
